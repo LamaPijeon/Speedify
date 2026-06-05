@@ -2,12 +2,12 @@ import time
 import os
 from spotify_client import SpotifyClient, TrackFetcher
 from display_manager import DisplayManager
-from epaper import epaper
+import epaper
 
 
 def main():
 
-    epd = epaper('epd3in6e').EPD()
+    epd = epaper.epd('epd3in6e').EPD()
     epd.init()
     epd.Clear()
 

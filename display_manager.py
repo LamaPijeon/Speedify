@@ -112,7 +112,7 @@ class DisplayManager:
         epd.display(epd.getbuffer(image))
 
     def epd_init(self):
-        epd = epaper('epd3in6e').EPD()
+        epd = epaper.epd('epd3in6e').EPD()
         epd.init()
         epd.Clear()
         return epd
