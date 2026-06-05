@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
 import requests
 import random
 from io import BytesIO
+from waveshare_epd import epd3in6e  # type: ignore
 
 
 class DisplayManager:
@@ -100,6 +101,18 @@ class DisplayManager:
 
         canvas.save(self.output_path)
 
+        self.display(self.epd_init())
+
     def clear(self):
         canvas = Image.new("RGB", (self.width, self.height), "black")
         canvas.save(self.output_path)
+
+    def display(self, epd):
+        image = Image.open(self.output_path)
+        epd.display(epd.getbuffer(image))
+
+    def epd_init(self):
+        epd = epd3in6e.EPD()
+        epd.init()
+        epd.Clear()
+        return epd

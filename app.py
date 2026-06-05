@@ -1,23 +1,20 @@
 import time
-import threading
 import os
 from spotify_client import SpotifyClient, TrackFetcher
 from display_manager import DisplayManager
-from server import app
-
-
-def run_server():
-    app.run(host="0.0.0.0", port=5001)
+from waveshare_epd import epd3in6e  # type: ignore
 
 
 def main():
+
+    epd = epd3in6e.EPD()
+    epd.init()
+    epd.Clear()
+
     client = SpotifyClient()
     fetcher = TrackFetcher(client.sp)
     display = DisplayManager()
     previous_track = None
-
-    threading.Thread(target=run_server, daemon=True).start()
-    print("Preview at http://localhost:5001")
 
     i = 0
     while i < 4:
