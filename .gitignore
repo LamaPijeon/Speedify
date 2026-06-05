@@ -1,8 +1,1 @@
 /.DS_Store
-/.cache
-/.mypy_cache
-/__pycache__
-/bin
-/include
-/lib
-/pyvenv.cfg
