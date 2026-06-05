@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
 import requests
 import random
 from io import BytesIO
-import epaper
+from waveshare_epd import epd3in6e
 
 
 class DisplayManager:
@@ -112,7 +112,7 @@ class DisplayManager:
         epd.display(epd.getbuffer(image))
 
     def epd_init(self):
-        epd = epaper.epaper('epd3in6e').EPD()
+        epd = epd3in6e.EPD()
         epd.init()
         epd.Clear()
         return epd
