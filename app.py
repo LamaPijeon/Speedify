@@ -7,7 +7,7 @@ import epaper
 
 def main():
 
-    epd = epaper.epd('epd3in6e').EPD()
+    epd = epaper.epaper('epd3in6e').EPD()
     epd.init()
     epd.Clear()
 
