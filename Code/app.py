@@ -1,11 +1,11 @@
 import time
 import threading
-from Code.spotify_client import SpotifyClient, TrackFetcher
-from Code.display_manager import DisplayManager
-from Code.config import DISPLAY_MODE
+from spotify_client import SpotifyClient, TrackFetcher
+from display_manager import DisplayManager
+from config import DISPLAY_MODE
 
 if DISPLAY_MODE == "screen":
-    from Code.server import app
+    from server import app
 
     def run_server():
         app.run(host="0.0.0.0", port=5001)
