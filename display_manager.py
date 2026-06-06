@@ -15,7 +15,7 @@ class DisplayManager:
         self.mode = DISPLAY_MODE
 
         if self.mode == "eink":
-            FONT_PATH = "/usr/share/fonts/truetype/msttcorefonts/andale_mono.ttf"
+            FONT_PATH = "/usr/share/fonts/truetype/msttcorefonts/freefont/FreeSansOblique.ttf"
         else:
             FONT_PATH = "/Library/Fonts/Andale Mono.ttf"
 
