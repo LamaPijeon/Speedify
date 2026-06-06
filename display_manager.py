@@ -29,8 +29,8 @@ class DisplayManager:
         # ~~~~~~~~~~~~~~ Canvas ~~~~~~~~~~~~~~
         canvas = self.fetch_art(track.album_art_url).resize(
             (self.width, self.height))
-        canvas = canvas.filter(ImageFilter.GaussianBlur(radius=30))
-        canvas = canvas.point(lambda p: p * 0.55)  # Darken the background
+        canvas = canvas.filter(ImageFilter.GaussianBlur(radius=8))
+        # canvas = canvas.point(lambda p: p * 0.75)  # Darken the background
         # ~~~~~~~~~~~~~~ Canvas ~~~~~~~~~~~~~~
 
         draw = ImageDraw.Draw(canvas)
@@ -44,6 +44,13 @@ class DisplayManager:
                     (255, 211, 182), (255, 139, 148), (206, 151, 251),
                     (246, 165, 235), (250, 169, 157), (253, 223, 126),
                     (103, 235, 250)]
+
+        overlay = Image.new("RGBA", (self.width, self.height), (0, 0, 0, 0))
+        ImageDraw.Draw(overlay).rectangle(
+            [0, 0, self.width, self.height], fill=(255, 255, 255, 80))
+        canvas = canvas.convert("RGBA")
+        canvas = Image.alpha_composite(canvas, overlay)
+        canvas = canvas.convert("RGB")
 
         ic_color = random.choice(pallette)
         ic_radius = 40
