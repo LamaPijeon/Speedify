@@ -2,8 +2,8 @@ import os
 import spotipy
 import json
 from spotipy.oauth2 import SpotifyOAuth
-from Code.track_info import TrackInfo
-from Code.config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI
+from track_info import TrackInfo
+from config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI
 
 
 class SpotifyClient:
