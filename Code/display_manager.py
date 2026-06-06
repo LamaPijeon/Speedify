@@ -56,7 +56,7 @@ class DisplayManager:
 
         overlay = Image.new("RGBA", (self.width, self.height), (0, 0, 0, 0))
         ImageDraw.Draw(overlay).rectangle(
-            [0, 0, self.width, self.height], fill=(255, 255, 255, 80))
+            [0, 0, self.width, self.height], fill=(1, 77, 78, 168))
         canvas = canvas.convert("RGBA")
         canvas = Image.alpha_composite(canvas, overlay)
         canvas = canvas.convert("RGB")
@@ -123,19 +123,37 @@ class DisplayManager:
         # ~~~~~~~~~~~~~~ Album ~~~~~~~~~~~~~~
 
         # ~~~~~~~~~~~~~~ Text ~~~~~~~~~~~~~~
-        text_x = self.height + 16
-        draw.text((text_x, 20), track.name, font=self.font_title,
-                  fill="white", stroke_width=2, stroke_fill="black")
-        draw.text((text_x, 80), track.artist, font=self.font_sub,
-                  fill="white", stroke_width=1, stroke_fill="black")
-        draw.text((text_x, 110), track.album, font=self.font_small,
-                  fill="white", stroke_width=1, stroke_fill="black")
+        text_x = 470
+        max_width = 125
+
+        def truncate(text, font):
+            while font.getlength(text) > max_width and len(text) > 1:
+                text = text[:-1]
+            return text + "…"
+
+        name = truncate(track.name, self.font_title)
+        artist = truncate(track.artist, self.font_sub)
+        album = truncate(track.album, self.font_small)
+
+        text_bg = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+        ImageDraw.Draw(text_bg).rectangle(
+            [462, 10, 598, 135], fill=(0, 0, 0, 160))
+        canvas = canvas.convert("RGBA")
+        canvas = Image.alpha_composite(canvas, text_bg)
+        canvas = canvas.convert("RGB")
+        draw = ImageDraw.Draw(canvas)
+
+        draw.text((text_x, 20), name, font=self.font_title, fill="white")
+        draw.text((text_x, 75), artist, font=self.font_sub, fill="white")
+        draw.text((text_x, 100), album,
+                  font=self.font_small, fill=(200, 200, 200))
         # ~~~~~~~~~~~~~~ Text ~~~~~~~~~~~~~~
 
         canvas.save(self.output_path)
 
         if self.mode == "eink":
             image = Image.open(self.output_path)
+            self.epd.Clear()
             self.epd.display(self.epd.getbuffer(image))
 
     def clear(self):
