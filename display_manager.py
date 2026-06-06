@@ -22,11 +22,13 @@ class DisplayManager:
         # ~~~~~~~~~~~~~~ Canvas ~~~~~~~~~~~~~~
         canvas = self.fetch_art(track.album_art_url).resize(
             (self.width, self.height))
-        canvas = canvas.filter(ImageFilter.GaussianBlur(radius=40))
+        canvas = canvas.filter(ImageFilter.GaussianBlur(radius=30))
         canvas = canvas.point(lambda p: p * 0.55)  # Darken the background
+
         # ~~~~~~~~~~~~~~ Canvas ~~~~~~~~~~~~~~
 
         draw = ImageDraw.Draw(canvas)
+        draw.rectangle([0, 0, 400, 600], fill=(255, 255, 255, 128))
 
         # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
 
