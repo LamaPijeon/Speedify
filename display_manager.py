@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
 import requests
 import random
 from io import BytesIO
-from waveshare_epd import epd3in6e
+from config import DISPLAY_MODE
 
 
 class DisplayManager:
@@ -10,6 +10,13 @@ class DisplayManager:
         self.width = width
         self.height = height
         self.output_path = "current.png"
+        self.mode = DISPLAY_MODE
+
+        if self.mode == "eink":
+            from waveshare_epd import epd3in6e
+            self.epd = epd3in6e.EPD()
+            self.epd.init()
+            self.epd.Clear()
 
     def fetch_art(self, url):
         if not url:
@@ -24,14 +31,11 @@ class DisplayManager:
             (self.width, self.height))
         canvas = canvas.filter(ImageFilter.GaussianBlur(radius=30))
         canvas = canvas.point(lambda p: p * 0.55)  # Darken the background
-
         # ~~~~~~~~~~~~~~ Canvas ~~~~~~~~~~~~~~
 
         draw = ImageDraw.Draw(canvas)
-        draw.rectangle([0, 0, 400, 600], fill=(255, 255, 255, 128))
 
         # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
-
         pallette = [(119, 183, 208), (132, 0, 136), (135, 189, 197),
                     (208, 19, 67), (203, 85, 67), (110, 119, 84),
                     (139, 94, 142), (255, 90, 90), (218, 255, 0),
@@ -49,13 +53,16 @@ class DisplayManager:
 
         vinyl_center_x = 333
         vinyl_center_y = self.height // 2
-        ImageDraw.Draw(canvas).ellipse(
-            (vinyl_center_x - oc_radius, vinyl_center_y - oc_radius,
-             vinyl_center_x + oc_radius, vinyl_center_y + oc_radius), fill=oc_color)
 
-        ImageDraw.Draw(canvas).ellipse(
+        draw.ellipse(
+            (vinyl_center_x - oc_radius, vinyl_center_y - oc_radius,
+             vinyl_center_x + oc_radius, vinyl_center_y + oc_radius),
+            fill=oc_color)
+
+        draw.ellipse(
             (vinyl_center_x - ic_radius, vinyl_center_y - ic_radius,
-             vinyl_center_x + ic_radius, vinyl_center_y + ic_radius), fill=ic_color)
+             vinyl_center_x + ic_radius, vinyl_center_y + ic_radius),
+            fill=ic_color)
 
         vinyl = Image.open("vinyl.png").resize((262, 262)).convert("RGBA")
         vinyl = vinyl.rotate(random.randint(0, 360))
@@ -73,48 +80,35 @@ class DisplayManager:
                      box=(vinyl_center_x - 32, vinyl_center_y - 32),
                      mask=artist_mask)
 
-        # Draw a black outline circle 2 pixels larger in radius than the avatar
         outline_box = (vinyl_center_x - 32,
                        vinyl_center_y - 32,
                        vinyl_center_x + 32,
                        vinyl_center_y + 32)
         draw.ellipse(outline_box, outline="gray", width=1)
-
         # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
 
         # ~~~~~~~~~~~~~~ Album ~~~~~~~~~~~~~~
-        # Album art on the left
-        album_art = self.fetch_art(track.album_art_url).resize(
-            (272, 272))
-
+        album_art = self.fetch_art(track.album_art_url).resize((272, 272))
         border_album = ImageOps.expand(album_art, border=2, fill='black')
-
-        canvas.paste(
-            album_art, (45, (self.height-272) // 2))
-        canvas.paste(
-            border_album, (45 - 2, (self.height-272) // 2 - 2))
+        canvas.paste(border_album, (43, (self.height - 276) // 2))
+        canvas.paste(album_art, (45, (self.height - 272) // 2))
         # ~~~~~~~~~~~~~~ Album ~~~~~~~~~~~~~~
 
-        # Text on the right
+        # ~~~~~~~~~~~~~~ Text ~~~~~~~~~~~~~~
         text_x = self.height + 10
         draw.text((text_x, 20), track.name, fill="white")
         draw.text((text_x, 60), track.artist, fill="gray")
         draw.text((text_x, 90), track.album, fill="gray")
+        # ~~~~~~~~~~~~~~ Text ~~~~~~~~~~~~~~
 
         canvas.save(self.output_path)
 
-        self.display(self.epd_init())
+        if self.mode == "eink":
+            image = Image.open(self.output_path)
+            self.epd.display(self.epd.getbuffer(image))
 
     def clear(self):
         canvas = Image.new("RGB", (self.width, self.height), "black")
         canvas.save(self.output_path)
-
-    def display(self, epd):
-        image = Image.open(self.output_path)
-        epd.display(epd.getbuffer(image))
-
-    def epd_init(self):
-        epd = epd3in6e.EPD()
-        epd.init()
-        epd.Clear()
-        return epd
+        if self.mode == "eink":
+            self.epd.Clear()
