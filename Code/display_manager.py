@@ -153,7 +153,7 @@ class DisplayManager:
 
         if self.mode == "eink":
             image = Image.open(self.output_path)
-            self.epd.Clear()
+            # self.epd.Clear()
             self.epd.display(self.epd.getbuffer(image))
 
     def clear(self):
