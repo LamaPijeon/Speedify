@@ -4,6 +4,8 @@ import random
 from io import BytesIO
 from config import DISPLAY_MODE
 
+FONT_PATH = "/usr/share/fonts/truetype/msttcorefonts/andale_mono.ttf"
+
 
 class DisplayManager:
     def __init__(self, width=600, height=400):
@@ -11,6 +13,15 @@ class DisplayManager:
         self.height = height
         self.output_path = "current.png"
         self.mode = DISPLAY_MODE
+
+        if self.mode == "eink":
+            FONT_PATH = "/usr/share/fonts/truetype/msttcorefonts/andale_mono.ttf"
+        else:
+            FONT_PATH = "/Library/Fonts/Andale Mono.ttf"
+
+        self.font_title = ImageFont.truetype(FONT_PATH, 40)
+        self.font_sub = ImageFont.truetype(FONT_PATH, 15)
+        self.font_small = ImageFont.truetype(FONT_PATH, 15)
 
         if self.mode == "eink":
             from waveshare_epd import epd3in6e
@@ -26,12 +37,19 @@ class DisplayManager:
         return img.resize((self.height, self.height))
 
     def render(self, track):
+
         # ~~~~~~~~~~~~~~ Canvas ~~~~~~~~~~~~~~
         canvas = self.fetch_art(track.album_art_url).resize(
             (self.width, self.height))
         canvas = canvas.filter(ImageFilter.GaussianBlur(radius=8))
-        # canvas = canvas.point(lambda p: p * 0.75)  # Darken the background
         # ~~~~~~~~~~~~~~ Canvas ~~~~~~~~~~~~~~
+
+        overlay = Image.new("RGBA", (self.width, self.height), (0, 0, 0, 0))
+        ImageDraw.Draw(overlay).rectangle(
+            [0, 0, self.width, self.height], fill=(255, 255, 255, 80))
+        canvas = canvas.convert("RGBA")
+        canvas = Image.alpha_composite(canvas, overlay)
+        canvas = canvas.convert("RGB")
 
         draw = ImageDraw.Draw(canvas)
 
@@ -45,22 +63,11 @@ class DisplayManager:
                     (246, 165, 235), (250, 169, 157), (253, 223, 126),
                     (103, 235, 250)]
 
-        overlay = Image.new("RGBA", (self.width, self.height), (0, 0, 0, 0))
-        ImageDraw.Draw(overlay).rectangle(
-            [0, 0, self.width, self.height], fill=(255, 255, 255, 80))
-        canvas = canvas.convert("RGBA")
-        canvas = Image.alpha_composite(canvas, overlay)
-        canvas = canvas.convert("RGB")
-
-        draw = ImageDraw.Draw(canvas)  # recreate draw on the new canvas
-
         ic_color = random.choice(pallette)
         ic_radius = 40
 
         oc_color = random.choice(pallette)
         oc_radius = 62
-
-        # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
 
         vinyl_center_x = 333
         vinyl_center_y = self.height // 2
@@ -100,7 +107,6 @@ class DisplayManager:
                        vinyl_center_y - 43,
                        vinyl_center_x + 43,
                        vinyl_center_y + 43)
-
         draw.ellipse(outline_box, outline="gray", width=1)
         # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
 
@@ -112,10 +118,14 @@ class DisplayManager:
         # ~~~~~~~~~~~~~~ Album ~~~~~~~~~~~~~~
 
         # ~~~~~~~~~~~~~~ Text ~~~~~~~~~~~~~~
-        text_x = self.height + 10
-        draw.text((text_x, 20), track.name, fill="white")
-        draw.text((text_x, 60), track.artist, fill="gray")
-        draw.text((text_x, 90), track.album, fill="gray")
+        text_x = self.height + 16
+
+        draw.text((text_x, 20), track.name, font=self.font_title,
+                  fill="white", stroke_width=2, stroke_fill="black")
+        draw.text((text_x, 80), track.artist, font=self.font_sub,
+                  fill="white", stroke_width=1, stroke_fill="black")
+        draw.text((text_x, 110), track.album,
+                  font=self.font_small, fill="white", stroke_width=1, stroke_fill="black")
         # ~~~~~~~~~~~~~~ Text ~~~~~~~~~~~~~~
 
         canvas.save(self.output_path)
