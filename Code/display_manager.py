@@ -1,23 +1,34 @@
-from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
-import requests
+import os
+import platform
 import random
 from io import BytesIO
+
+import requests
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
+
 from config import DISPLAY_MODE
 
-FONT_PATH = "/usr/share/fonts/truetype/msttcorefonts/andale_mono.ttf"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ASSETS_DIR = os.path.join(BASE_DIR, "..", "Assets")
+
+if DISPLAY_MODE == "screen":
+    FONT_PATH = os.path.join(
+        ASSETS_DIR, "Fonts", "Outfit", "Outfit-VariableFont_wght.ttf")
+else:
+    FONT_PATH = os.path.join(BASE_DIR, "..", "Assets",
+                             "Fonts", "Outfit", "Outfit-VariableFont_wght.ttf")
+
+
+VINYL_PATH = os.path.join(ASSETS_DIR, "vinyl.png")
+OUTPUT_PATH = os.path.join(BASE_DIR, "..", "current.png")
 
 
 class DisplayManager:
     def __init__(self, width=600, height=400):
         self.width = width
         self.height = height
-        self.output_path = "current.png"
+        self.output_path = OUTPUT_PATH
         self.mode = DISPLAY_MODE
-
-        if self.mode == "eink":
-            FONT_PATH = "/usr/share/fonts/truetype/msttcorefonts/freefont/FreeSansOblique.ttf"
-        else:
-            FONT_PATH = "/Library/Fonts/Andale Mono.ttf"
 
         self.font_title = ImageFont.truetype(FONT_PATH, 40)
         self.font_sub = ImageFont.truetype(FONT_PATH, 15)
@@ -37,7 +48,6 @@ class DisplayManager:
         return img.resize((self.height, self.height))
 
     def render(self, track):
-
         # ~~~~~~~~~~~~~~ Canvas ~~~~~~~~~~~~~~
         canvas = self.fetch_art(track.album_art_url).resize(
             (self.width, self.height))
@@ -65,7 +75,6 @@ class DisplayManager:
 
         ic_color = random.choice(pallette)
         ic_radius = 40
-
         oc_color = random.choice(pallette)
         oc_radius = 62
 
@@ -76,18 +85,16 @@ class DisplayManager:
             (vinyl_center_x - oc_radius, vinyl_center_y - oc_radius,
              vinyl_center_x + oc_radius, vinyl_center_y + oc_radius),
             fill=oc_color)
-
         draw.ellipse(
             (vinyl_center_x - ic_radius, vinyl_center_y - ic_radius,
              vinyl_center_x + ic_radius, vinyl_center_y + ic_radius),
             fill=ic_color)
-
         draw.ellipse(
             (vinyl_center_x - 62, vinyl_center_y - 62,
              vinyl_center_x + 62, vinyl_center_y + 62),
             fill="white")
 
-        vinyl = Image.open("vinyl.png").resize((262, 262)).convert("RGBA")
+        vinyl = Image.open(VINYL_PATH).resize((262, 262)).convert("RGBA")
         vinyl = vinyl.rotate(random.randint(0, 360))
         vinyl_coords = (vinyl_center_x - 131, vinyl_center_y - 131)
         canvas.paste(im=vinyl, box=vinyl_coords, mask=vinyl)
@@ -103,10 +110,8 @@ class DisplayManager:
                      box=(vinyl_center_x - 43, vinyl_center_y - 43),
                      mask=artist_mask)
 
-        outline_box = (vinyl_center_x - 43,
-                       vinyl_center_y - 43,
-                       vinyl_center_x + 43,
-                       vinyl_center_y + 43)
+        outline_box = (vinyl_center_x - 43, vinyl_center_y - 43,
+                       vinyl_center_x + 43, vinyl_center_y + 43)
         draw.ellipse(outline_box, outline="gray", width=1)
         # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
 
@@ -119,13 +124,12 @@ class DisplayManager:
 
         # ~~~~~~~~~~~~~~ Text ~~~~~~~~~~~~~~
         text_x = self.height + 16
-
         draw.text((text_x, 20), track.name, font=self.font_title,
                   fill="white", stroke_width=2, stroke_fill="black")
         draw.text((text_x, 80), track.artist, font=self.font_sub,
                   fill="white", stroke_width=1, stroke_fill="black")
-        draw.text((text_x, 110), track.album,
-                  font=self.font_small, fill="white", stroke_width=1, stroke_fill="black")
+        draw.text((text_x, 110), track.album, font=self.font_small,
+                  fill="white", stroke_width=1, stroke_fill="black")
         # ~~~~~~~~~~~~~~ Text ~~~~~~~~~~~~~~
 
         canvas.save(self.output_path)
