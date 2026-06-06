@@ -78,10 +78,10 @@ class DisplayManager:
         # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
 
         # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
-        artist_art = self.fetch_art(track.artist_art_url).resize((64, 64))
-        artist_mask = Image.new("L", (64, 64), 0)
-        ImageDraw.Draw(artist_mask).ellipse((0, 0, 64, 64), fill=255)
-        artist_art = ImageOps.fit(artist_art, (64, 64), centering=(0.5, 0.5))
+        artist_art = self.fetch_art(track.artist_art_url).resize((96, 96))
+        artist_mask = Image.new("L", (96, 96), 0)
+        ImageDraw.Draw(artist_mask).ellipse((0, 0, 96, 96), fill=255)
+        artist_art = ImageOps.fit(artist_art, (96, 96), centering=(0.5, 0.5))
 
         canvas.paste(im=artist_art,
                      box=(vinyl_center_x - 32, vinyl_center_y - 32),
