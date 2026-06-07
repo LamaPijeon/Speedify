@@ -64,41 +64,41 @@ class DisplayManager:
         draw = ImageDraw.Draw(canvas)
 
         # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
-        pallette = [(119, 183, 208), (132, 0, 136), (135, 189, 197),
-                    (208, 19, 67), (203, 85, 67), (110, 119, 84),
-                    (139, 94, 142), (255, 90, 90), (218, 255, 0),
-                    (255, 87, 51), (255, 173, 5), (147, 205, 120),
-                    (102, 190, 203), (168, 230, 207), (220, 237, 193),
-                    (255, 211, 182), (255, 139, 148), (206, 151, 251),
-                    (246, 165, 235), (250, 169, 157), (253, 223, 126),
-                    (103, 235, 250)]
+        # pallette = [(119, 183, 208), (132, 0, 136), (135, 189, 197),
+        #             (208, 19, 67), (203, 85, 67), (110, 119, 84),
+        #             (139, 94, 142), (255, 90, 90), (218, 255, 0),
+        #             (255, 87, 51), (255, 173, 5), (147, 205, 120),
+        #             (102, 190, 203), (168, 230, 207), (220, 237, 193),
+        #             (255, 211, 182), (255, 139, 148), (206, 151, 251),
+        #             (246, 165, 235), (250, 169, 157), (253, 223, 126),
+        #             (103, 235, 250)]
 
-        ic_color = random.choice(pallette)
-        ic_radius = 40
-        oc_color = random.choice(pallette)
-        oc_radius = 62
+        # ic_color = random.choice(pallette)
+        # ic_radius = 40
+        # oc_color = random.choice(pallette)
+        # oc_radius = 62
 
-        vinyl_center_x = 333
-        vinyl_center_y = self.height // 2
+        # vinyl_center_x = 333
+        # vinyl_center_y = self.height // 2
 
-        draw.ellipse(
-            (vinyl_center_x - oc_radius, vinyl_center_y - oc_radius,
-             vinyl_center_x + oc_radius, vinyl_center_y + oc_radius),
-            fill=oc_color)
-        draw.ellipse(
-            (vinyl_center_x - ic_radius, vinyl_center_y - ic_radius,
-             vinyl_center_x + ic_radius, vinyl_center_y + ic_radius),
-            fill=ic_color)
-        draw.ellipse(
-            (vinyl_center_x - 62, vinyl_center_y - 62,
-             vinyl_center_x + 62, vinyl_center_y + 62),
-            fill="white")
+        # draw.ellipse(
+        #     (vinyl_center_x - oc_radius, vinyl_center_y - oc_radius,
+        #      vinyl_center_x + oc_radius, vinyl_center_y + oc_radius),
+        #     fill=oc_color)
+        # draw.ellipse(
+        #     (vinyl_center_x - ic_radius, vinyl_center_y - ic_radius,
+        #      vinyl_center_x + ic_radius, vinyl_center_y + ic_radius),
+        #     fill=ic_color)
+        # draw.ellipse(
+        #     (vinyl_center_x - 62, vinyl_center_y - 62,
+        #      vinyl_center_x + 62, vinyl_center_y + 62),
+        #     fill="white")
 
-        vinyl = Image.open(VINYL_PATH).resize((262, 262)).convert("RGBA")
-        vinyl = vinyl.rotate(random.randint(0, 360))
-        vinyl_coords = (vinyl_center_x - 131, vinyl_center_y - 131)
-        canvas.paste(im=vinyl, box=vinyl_coords, mask=vinyl)
-        # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
+        # vinyl = Image.open(VINYL_PATH).resize((262, 262)).convert("RGBA")
+        # vinyl = vinyl.rotate(random.randint(0, 360))
+        # vinyl_coords = (vinyl_center_x - 131, vinyl_center_y - 131)
+        # canvas.paste(im=vinyl, box=vinyl_coords, mask=vinyl)
+        # # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
 
         # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
         artist_art = self.fetch_art(track.artist_art_url).resize((86, 86))
