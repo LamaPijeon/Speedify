@@ -63,70 +63,69 @@ class DisplayManager:
 
         draw = ImageDraw.Draw(canvas)
 
-        # # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
-        # pallette = [(119, 183, 208), (132, 0, 136), (135, 189, 197),
-        #             (208, 19, 67), (203, 85, 67), (110, 119, 84),
-        #             (139, 94, 142), (255, 90, 90), (218, 255, 0),
-        #             (255, 87, 51), (255, 173, 5), (147, 205, 120),
-        #             (102, 190, 203), (168, 230, 207), (220, 237, 193),
-        #             (255, 211, 182), (255, 139, 148), (206, 151, 251),
-        #             (246, 165, 235), (250, 169, 157), (253, 223, 126),
-        #             (103, 235, 250)]
+        # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
+        pallette = [(119, 183, 208), (132, 0, 136), (135, 189, 197),
+                    (208, 19, 67), (203, 85, 67), (110, 119, 84),
+                    (139, 94, 142), (255, 90, 90), (218, 255, 0),
+                    (255, 87, 51), (255, 173, 5), (147, 205, 120),
+                    (102, 190, 203), (168, 230, 207), (220, 237, 193),
+                    (255, 211, 182), (255, 139, 148), (206, 151, 251),
+                    (246, 165, 235), (250, 169, 157), (253, 223, 126),
+                    (103, 235, 250)]
 
-        # ic_color = random.choice(pallette)
-        # ic_radius = 40
-        # oc_color = random.choice(pallette)
-        # oc_radius = 62
+        ic_color = random.choice(pallette)
+        ic_radius = 40
+        oc_color = random.choice(pallette)
+        oc_radius = 62
 
-        # vinyl_center_x = 333
-        # vinyl_center_y = self.height // 2
+        vinyl_center_x = 600 - 8
+        vinyl_center_y = self.height // 2
 
-        # draw.ellipse(
-        #     (vinyl_center_x - oc_radius, vinyl_center_y - oc_radius,
-        #      vinyl_center_x + oc_radius, vinyl_center_y + oc_radius),
-        #     fill=oc_color)
-        # draw.ellipse(
-        #     (vinyl_center_x - ic_radius, vinyl_center_y - ic_radius,
-        #      vinyl_center_x + ic_radius, vinyl_center_y + ic_radius),
-        #     fill=ic_color)
-        # draw.ellipse(
-        #     (vinyl_center_x - 62, vinyl_center_y - 62,
-        #      vinyl_center_x + 62, vinyl_center_y + 62),
-        #     fill="white")
+        draw.ellipse(
+            (vinyl_center_x - oc_radius, vinyl_center_y - oc_radius,
+             vinyl_center_x + oc_radius, vinyl_center_y + oc_radius),
+            fill=oc_color)
+        draw.ellipse(
+            (vinyl_center_x - ic_radius, vinyl_center_y - ic_radius,
+             vinyl_center_x + ic_radius, vinyl_center_y + ic_radius),
+            fill=ic_color)
+        draw.ellipse(
+            (vinyl_center_x - 62, vinyl_center_y - 62,
+             vinyl_center_x + 62, vinyl_center_y + 62),
+            fill="white")
 
-        # vinyl = Image.open(VINYL_PATH).resize((262, 262)).convert("RGBA")
-        # vinyl = vinyl.rotate(random.randint(0, 360))
-        # vinyl_coords = (vinyl_center_x - 131, vinyl_center_y - 131)
-        # canvas.paste(im=vinyl, box=vinyl_coords, mask=vinyl)
-        # # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
+        vinyl = Image.open(VINYL_PATH).resize((256, 256)).convert("RGBA")
+        vinyl = vinyl.rotate(random.randint(0, 360))
+        vinyl_coords = (vinyl_center_x - 128, vinyl_center_y - 128)
+        canvas.paste(im=vinyl, box=vinyl_coords, mask=vinyl)
+        # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
 
-        # # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
-        # artist_art = self.fetch_art(track.artist_art_url).resize((86, 86))
-        # artist_mask = Image.new("L", (86, 86), 0)
-        # ImageDraw.Draw(artist_mask).ellipse((0, 0, 86, 86), fill=255)
-        # artist_art = ImageOps.fit(artist_art, (86, 86), centering=(0.5, 0.5))
+        # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
+        artist_art = self.fetch_art(track.artist_art_url).resize((86, 86))
+        artist_mask = Image.new("L", (86, 86), 0)
+        ImageDraw.Draw(artist_mask).ellipse((0, 0, 86, 86), fill=255)
+        artist_art = ImageOps.fit(artist_art, (86, 86), centering=(0.5, 0.5))
 
-        # canvas.paste(im=artist_art,
-        #              box=(vinyl_center_x - 43, vinyl_center_y - 43),
-        #              mask=artist_mask)
+        canvas.paste(im=artist_art,
+                     box=(vinyl_center_x - 43, vinyl_center_y - 43),
+                     mask=artist_mask)
 
-        # outline_box = (vinyl_center_x - 43, vinyl_center_y - 43,
-        #                vinyl_center_x + 43, vinyl_center_y + 43)
-        # draw.ellipse(outline_box, outline="gray", width=1)
-        # # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
+        outline_box = (vinyl_center_x - 43, vinyl_center_y - 43,
+                       vinyl_center_x + 43, vinyl_center_y + 43)
+        draw.ellipse(outline_box, outline="gray", width=1)
+        # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
 
         # ~~~~~~~~~~~~~~ Album ~~~~~~~~~~~~~~
         vinyl_size = 300
         album_art = self.fetch_art(track.album_art_url).resize(
             (vinyl_size, vinyl_size))
         border_album = ImageOps.expand(album_art, border=2, fill='black')
-        canvas.paste(border_album, (43, (self.height - vinyl_size - 4) // 2))
-        canvas.paste(album_art, (45, (self.height - vinyl_size) // 2))
+        canvas.paste(border_album, (14, (self.height - vinyl_size - 4) // 2))
+        canvas.paste(album_art, (16, (self.height - vinyl_size) // 2))
         # ~~~~~~~~~~~~~~ Album ~~~~~~~~~~~~~~
 
         # ~~~~~~~~~~~~~~ Text ~~~~~~~~~~~~~~
-        text_x = 470
-        max_width = 125
+        max_width = 192
 
         def truncate(text, font):
             while font.getlength(text) > max_width and len(text) > 1:
@@ -138,16 +137,18 @@ class DisplayManager:
         album = truncate(track.album, self.font_small)
 
         text_bg = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
-        ImageDraw.Draw(text_bg).rectangle(
-            [462, 10, 598, 135], fill=(0, 0, 0, 160))
+        ImageDraw.Draw(text_bg).rounded_rectangle(
+            [(16 + 300 + 8), (self.height - vinyl_size) // 2,
+             (16 + 300 + 8) + max_width, (self.height - vinyl_size) // 2 + 300],
+            radius=4, fill=(0, 0, 0, 128))
         canvas = canvas.convert("RGBA")
         canvas = Image.alpha_composite(canvas, text_bg)
         canvas = canvas.convert("RGB")
         draw = ImageDraw.Draw(canvas)
 
-        draw.text((text_x, 20), name, font=self.font_title, fill="white")
-        draw.text((text_x, 75), artist, font=self.font_sub, fill="white")
-        draw.text((text_x, 100), album,
+        draw.text((400, 20), name, font=self.font_title, fill="white")
+        draw.text((400, 75), artist, font=self.font_sub, fill="white")
+        draw.text((400, 100), album,
                   font=self.font_small, fill=(200, 200, 200))
         # ~~~~~~~~~~~~~~ Text ~~~~~~~~~~~~~~
 
