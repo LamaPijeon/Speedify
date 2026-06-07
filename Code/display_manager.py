@@ -116,10 +116,12 @@ class DisplayManager:
         # # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
 
         # ~~~~~~~~~~~~~~ Album ~~~~~~~~~~~~~~
-        album_art = self.fetch_art(track.album_art_url).resize((272, 272))
+        vinyl_size = 300
+        album_art = self.fetch_art(track.album_art_url).resize(
+            (vinyl_size, vinyl_size))
         border_album = ImageOps.expand(album_art, border=2, fill='black')
-        canvas.paste(border_album, (43, (self.height - 276) // 2))
-        canvas.paste(album_art, (45, (self.height - 272) // 2))
+        canvas.paste(border_album, (43, (self.height - vinyl_size - 4) // 2))
+        canvas.paste(album_art, (45, (self.height - vinyl_size) // 2))
         # ~~~~~~~~~~~~~~ Album ~~~~~~~~~~~~~~
 
         # ~~~~~~~~~~~~~~ Text ~~~~~~~~~~~~~~
