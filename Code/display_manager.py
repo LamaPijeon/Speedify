@@ -11,14 +11,8 @@ from config import DISPLAY_MODE
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSETS_DIR = os.path.join(BASE_DIR, "..", "Assets")
 
-if DISPLAY_MODE == "screen":
-    FONT_PATH = os.path.join(
-        ASSETS_DIR, "Fonts", "Outfit", "Outfit-VariableFont_wght.ttf")
-else:
-    FONT_PATH = os.path.join(BASE_DIR, "..", "Assets",
-                             "Fonts", "Outfit", "Outfit-VariableFont_wght.ttf")
-
-
+FONT_PATH = os.path.join(ASSETS_DIR, "Fonts", "Outfit",
+                         "Outfit-VariableFont_wght.ttf")
 VINYL_PATH = os.path.join(ASSETS_DIR, "Vinyl.png")
 OUTPUT_PATH = os.path.join(BASE_DIR, "..", "current.png")
 
