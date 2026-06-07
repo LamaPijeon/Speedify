@@ -19,7 +19,7 @@ else:
                              "Fonts", "Outfit", "Outfit-VariableFont_wght.ttf")
 
 
-VINYL_PATH = os.path.join(ASSETS_DIR, "vinyl.png")
+VINYL_PATH = os.path.join(ASSETS_DIR, "Vinyl.png")
 OUTPUT_PATH = os.path.join(BASE_DIR, "..", "current.png")
 
 
