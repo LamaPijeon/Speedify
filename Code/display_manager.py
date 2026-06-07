@@ -100,20 +100,20 @@ class DisplayManager:
         # canvas.paste(im=vinyl, box=vinyl_coords, mask=vinyl)
         # # ~~~~~~~~~~~~~~ Vinyl ~~~~~~~~~~~~~~
 
-        # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
-        artist_art = self.fetch_art(track.artist_art_url).resize((86, 86))
-        artist_mask = Image.new("L", (86, 86), 0)
-        ImageDraw.Draw(artist_mask).ellipse((0, 0, 86, 86), fill=255)
-        artist_art = ImageOps.fit(artist_art, (86, 86), centering=(0.5, 0.5))
+        # # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
+        # artist_art = self.fetch_art(track.artist_art_url).resize((86, 86))
+        # artist_mask = Image.new("L", (86, 86), 0)
+        # ImageDraw.Draw(artist_mask).ellipse((0, 0, 86, 86), fill=255)
+        # artist_art = ImageOps.fit(artist_art, (86, 86), centering=(0.5, 0.5))
 
-        canvas.paste(im=artist_art,
-                     box=(vinyl_center_x - 43, vinyl_center_y - 43),
-                     mask=artist_mask)
+        # canvas.paste(im=artist_art,
+        #              box=(vinyl_center_x - 43, vinyl_center_y - 43),
+        #              mask=artist_mask)
 
-        outline_box = (vinyl_center_x - 43, vinyl_center_y - 43,
-                       vinyl_center_x + 43, vinyl_center_y + 43)
-        draw.ellipse(outline_box, outline="gray", width=1)
-        # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
+        # outline_box = (vinyl_center_x - 43, vinyl_center_y - 43,
+        #                vinyl_center_x + 43, vinyl_center_y + 43)
+        # draw.ellipse(outline_box, outline="gray", width=1)
+        # # ~~~~~~~~~~~~~~ Artist ~~~~~~~~~~~~~~
 
         # ~~~~~~~~~~~~~~ Album ~~~~~~~~~~~~~~
         album_art = self.fetch_art(track.album_art_url).resize((272, 272))
