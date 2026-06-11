@@ -3,7 +3,7 @@ from spotify_client import TrackFetcher
 
 
 class ButtonController:
-    def __init__(self, fetcher: TrackFetcher, prev_pin=17, pause_pin=27, skip_pin=22):
+    def __init__(self, fetcher: TrackFetcher, prev_pin=17, pause_pin=27, skip_pin=4):
         self.fetcher = fetcher
 
         self.prev_btn = Button(prev_pin, pull_up=True)
