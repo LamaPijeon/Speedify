@@ -1,5 +1,6 @@
 import time
 import threading
+
 from spotify_client import SpotifyClient, TrackFetcher
 from display_manager import DisplayManager
 from config import DISPLAY_MODE
@@ -16,6 +17,9 @@ def main():
     fetcher = TrackFetcher(client.sp)
     display = DisplayManager()
     previous_track = None
+    no_track_start = None
+    random_display_start = None
+    paused_start = None
 
     if DISPLAY_MODE == "screen":
         threading.Thread(target=run_server, daemon=True).start()
@@ -23,12 +27,48 @@ def main():
 
     while True:
         track = fetcher.get_current_track()
-        if track != previous_track:
-            if track:
+        paused = False
+        if track:
+            if hasattr(track, "is_playing"):
+                paused = not track.is_playing
+            elif isinstance(track, dict):
+                paused = not track.get("is_playing", True)
+
+        if track and not paused:
+            if random_display_start is not None or track != previous_track:
                 display.render(track)
-            else:
+                previous_track = track
+            no_track_start = None
+            paused_start = None
+            random_display_start = None
+
+        elif track and paused:
+            if paused_start is None:
+                paused_start = time.time()
+            elif time.time() - paused_start >= 30:
+                if random_display_start is None:
+                    display.render_random()
+                    random_display_start = time.time()
+                    previous_track = None
+                elif time.time() - random_display_start >= 120:
+                    display.render_random()
+                    random_display_start = time.time()
+
+        else:
+            paused_start = None
+            if previous_track is not None:
                 display.clear()
-            previous_track = track
+                previous_track = None
+            if random_display_start is None:
+                if no_track_start is None:
+                    no_track_start = time.time()
+                elif time.time() - no_track_start >= 30:
+                    display.render_random()
+                    random_display_start = time.time()
+            elif time.time() - random_display_start >= 120:
+                display.render_random()
+                random_display_start = time.time()
+
         time.sleep(3)
 
 

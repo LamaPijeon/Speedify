@@ -13,7 +13,7 @@ assets_dir = os.path.join(base_dir, "..", "Assets")
 
 font_path = os.path.join(assets_dir, "Fonts", "Outfit",
                          "Outfit-VariableFont_wght.ttf")
-vinyl_path = os.path.join(assets_dir, "Vinyl.png")
+vinyl_path = os.path.join(assets_dir, "Pics", "vinyl.png")
 output_path = os.path.join(base_dir, "..", "current.png")
 
 
@@ -138,6 +138,19 @@ class DisplayManager:
 
         canvas.save(self.output_path)
 
+        if self.mode == "eink":
+            image = Image.open(self.output_path)
+            self.epd.display(self.epd.getbuffer(image))
+
+    def render_random(self):
+
+        folder_path = os.path.join(assets_dir, "Pics")
+        all_items = os.listdir(folder_path)
+        random_item = random.choice(all_items)
+        full_path = os.path.join(folder_path, random_item)
+
+        img = Image.open(full_path).resize((self.width, self.height))
+        img.save(self.output_path)
         if self.mode == "eink":
             image = Image.open(self.output_path)
             self.epd.display(self.epd.getbuffer(image))
