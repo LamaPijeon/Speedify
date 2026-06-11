@@ -3,6 +3,7 @@ import threading
 
 from spotify_client import SpotifyClient, TrackFetcher
 from display_manager import DisplayManager
+from button_controller import ButtonController
 from config import DISPLAY_MODE
 
 if DISPLAY_MODE == "screen":
@@ -13,8 +14,21 @@ if DISPLAY_MODE == "screen":
 
 
 def main():
-    client = SpotifyClient()
-    fetcher = TrackFetcher(client.sp)
+    while True:
+        try:
+            client = SpotifyClient()
+            fetcher = TrackFetcher(client.sp)
+            break
+        except Exception as e:
+            print(f"Spotify init failed: {e}, retrying in 10s...")
+            display.render_random()
+            time.sleep(25)
+
+
+client = SpotifyClient()
+  fetcher = TrackFetcher(client.sp)
+   if DISPLAY_MODE == "eink":
+        buttons = ButtonController(fetcher)
     display = DisplayManager()
     previous_track = None
     no_track_start = None

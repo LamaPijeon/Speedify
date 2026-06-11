@@ -143,9 +143,9 @@ class DisplayManager:
             self.epd.display(self.epd.getbuffer(image))
 
     def render_random(self):
-
         folder_path = os.path.join(assets_dir, "Pics")
-        all_items = os.listdir(folder_path)
+        all_items = [f for f in os.listdir(
+            folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
         random_item = random.choice(all_items)
         full_path = os.path.join(folder_path, random_item)
 

@@ -1,0 +1,14 @@
+[Unit]
+Description=Speedify
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/home/lamapijeon/Speedify/venv/bin/python /home/lamapijeon/Speedify/Code/app.py
+WorkingDirectory=/home/lamapijeon/Speedify/Code
+Restart=always
+RestartSec=10
+User=lamapijeon
+
+[Install]
+WantedBy=multi-user.target
