@@ -9,8 +9,9 @@ from config import DISPLAY_MODE
 if DISPLAY_MODE == "screen":
     from server import app
 
-    def run_server():
-        app.run(host="0.0.0.0", port=5001)
+
+def run_server():
+    app.run(host="0.0.0.0", port=5001)
 
 
 def main():
@@ -24,10 +25,9 @@ def main():
             display.render_random()
             time.sleep(25)
 
-
-client = SpotifyClient()
-  fetcher = TrackFetcher(client.sp)
-   if DISPLAY_MODE == "eink":
+    client = SpotifyClient()
+    fetcher = TrackFetcher(client.sp)
+    if DISPLAY_MODE == "eink":
         buttons = ButtonController(fetcher)
     display = DisplayManager()
     previous_track = None
