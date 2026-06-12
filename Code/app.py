@@ -3,18 +3,29 @@ import threading
 
 from spotify_client import SpotifyClient, TrackFetcher
 from display_manager import DisplayManager
-from button_controller import ButtonController
 from config import DISPLAY_MODE
 
 if DISPLAY_MODE == "screen":
     from server import app
 
-
-def run_server():
-    app.run(host="0.0.0.0", port=5001)
+    def run_server():
+        app.run(host="0.0.0.0", port=5001)
 
 
 def main():
+    display = DisplayManager()
+
+    if DISPLAY_MODE == "е-ink":
+        import os
+        flag_path = os.path.join(os.path.dirname(
+            os.path.abspath(__file__)), ".first_boot")
+
+        if not os.path.exists(flag_path):
+            display.render_initial(os.path.join(os.path.dirname(
+                os.path.abspath(__file__)), "..", "Assets", "happy_birthday.png"))
+            time.sleep(30)
+            open(flag_path, 'w').close()
+
     while True:
         try:
             client = SpotifyClient()
@@ -25,19 +36,18 @@ def main():
             display.render_random()
             time.sleep(25)
 
-    client = SpotifyClient()
-    fetcher = TrackFetcher(client.sp)
     if DISPLAY_MODE == "eink":
+        from button_controller import ButtonController
         buttons = ButtonController(fetcher)
-    display = DisplayManager()
-    previous_track = None
-    no_track_start = None
-    random_display_start = None
-    paused_start = None
 
     if DISPLAY_MODE == "screen":
         threading.Thread(target=run_server, daemon=True).start()
         print("Preview at http://localhost:5001")
+
+    previous_track = None
+    no_track_start = None
+    random_display_start = None
+    paused_start = None
 
     while True:
         track = fetcher.get_current_track()

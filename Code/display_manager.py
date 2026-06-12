@@ -34,6 +34,13 @@ class DisplayManager:
             self.epd.init()
             self.epd.Clear()
 
+    def render_initial(self, image_path):
+        img = Image.open(image_path).resize((self.width, self.height))
+        img.save(self.output_path)
+        if self.mode == "eink":
+            image = Image.open(self.output_path)
+            self.epd.display(self.epd.getbuffer(image))
+
     def fetch_art(self, url):
         if not url:
             return Image.new("RGB", (self.height, self.height), "gray")
