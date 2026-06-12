@@ -22,7 +22,7 @@ def main():
 
         if not os.path.exists(flag_path):
             display.render_initial(os.path.join(os.path.dirname(
-                os.path.abspath(__file__)), "..", "Assets", "happy_birthday.png"))
+                os.path.abspath(__file__)), "..", "Assets", "Pics", "happy-birthday.png"))
             time.sleep(30)
             open(flag_path, 'w').close()
 
