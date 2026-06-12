@@ -1,9 +1,9 @@
 from gpiozero import Button
 import time
 
-prev_btn = Button(5, pull_up=True, bounce_time=0.5)
-pause_btn = Button(6, pull_up=True, bounce_time=0.5)
-skip_btn = Button(13, pull_up=True, bounce_time=0.5)
+prev_btn = Button(5, pull_up=True, bounce_time=0.15)
+pause_btn = Button(6, pull_up=True, bounce_time=0.15)
+skip_btn = Button(13, pull_up=True, bounce_time=0.15)
 
 prev_btn.when_pressed = lambda: print("PREVIOUS pressed")
 pause_btn.when_pressed = lambda: print("PAUSE pressed")
