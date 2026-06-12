@@ -15,7 +15,7 @@ if DISPLAY_MODE == "screen":
 def main():
     display = DisplayManager()
 
-    if DISPLAY_MODE == "е-ink":
+    if DISPLAY_MODE == "еink":
         import os
         flag_path = os.path.join(os.path.dirname(
             os.path.abspath(__file__)), ".first_boot")
