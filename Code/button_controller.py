@@ -6,9 +6,9 @@ class ButtonController:
     def __init__(self, fetcher: TrackFetcher, prev_pin=5, pause_pin=6, skip_pin=13):
         self.fetcher = fetcher
 
-        self.prev_btn = Button(prev_pin, pull_up=True, bounce_time=0.15)
-        self.pause_btn = Button(pause_pin, pull_up=True, bounce_time=0.15)
-        self.skip_btn = Button(skip_pin, pull_up=True, bounce_time=0.15)
+        self.prev_btn = Button(prev_pin, pull_up=True, bounce_time=0.075)
+        self.pause_btn = Button(pause_pin, pull_up=True, bounce_time=0.075)
+        self.skip_btn = Button(skip_pin, pull_up=True, bounce_time=0.075)
 
         self.prev_btn.when_pressed = self.on_prev
         self.pause_btn.when_pressed = self.on_pause
