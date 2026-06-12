@@ -15,7 +15,7 @@ if DISPLAY_MODE == "screen":
 def main():
     display = DisplayManager()
 
-    if DISPLAY_MODE == "eeink":
+    if DISPLAY_MODE == "eink":
         import os
         flag_path = os.path.join(os.path.dirname(
             os.path.abspath(__file__)), ".first_boot")
